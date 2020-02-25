@@ -1,11 +1,9 @@
 class BoardController():
     def __init__(self):
-        self.total = 0
+        self.losses = []
 
-    def add_value(self, value):
-        self.total += value
+    def add_loss(self, loss):
+        self.losses.append(loss)
 
-        return self.total
-
-    def get_total(self):
-        return self.total
+    def get_losses(self):
+        return self.losses

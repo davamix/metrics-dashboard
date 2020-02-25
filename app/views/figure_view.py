@@ -16,4 +16,7 @@ class FigureView(View):
 
         data = base64.b64encode(buf.getbuffer()).decode("ascii")
 
-        return f"<img src='data:image/png;base64, {data}' />"
+        return f"<img src='data:image/png;base64, {data}' />" 
+
+    def get_values(self):
+        return []
