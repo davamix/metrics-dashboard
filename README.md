@@ -1,21 +1,20 @@
 ## Metrics dashboard (WIP)
 
-Build:
+### Build:
 ```
 docker-compose build
 ```
 
-Run:
+### Run:
 ```
 docker-compose up
 ```
 
-GET 
-```
-curl http://127.0.0.1:5000/board
-```
+### GET
 
-POST
+Navigate to http://127.0.0.1:5000/board
+
+### POST
 ```
-curl -d '{"value":5}' -H "Content-Type: application/json" -X POST http://127.0.0.1:5000/board
+python3 client.py
 ```
