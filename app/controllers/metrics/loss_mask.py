@@ -1,7 +1,7 @@
 from flask import request
 from flask.views import MethodView
 
-class TotalLossController(MethodView):
+class LossMaskController(MethodView):
     def __init__(self, model):
         self.model = model
     
