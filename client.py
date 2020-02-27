@@ -1,13 +1,22 @@
 import requests
 import json
 
-url = "http://127.0.0.1:5000/board"
+'''
+Send a POST with the total_loss values from the metrics.json file
+'''
 
-data = {'loss':0.4}
-headers = {'Content-type':'application/json', 'Accept':'text/plain'}
+url = "http://127.0.0.1:5000/metrics/loss"
 
-print(data)
+def send_data(data):
+    headers = {'Content-type':'application/json', 'Accept':'text/plain'}
 
-response = requests.post(url, data = json.dumps(data), headers = headers)
+    response = requests.post(url, data=json.dumps(data), headers=headers)
 
-print(response.text)
+def read_json(line, key):
+    data = json.loads(line)
+
+    send_data(data[key])
+
+with open("metrics.json", "r") as f:
+    for l in f.readlines():
+        read_json(l, "total_loss")
