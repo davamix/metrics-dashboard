@@ -1,5 +1,7 @@
 import base64
 from io import BytesIO
+from multiprocessing import Pool
+from flask import render_template
 from flask.views import MethodView
 from matplotlib.figure import Figure
 
@@ -8,19 +10,20 @@ class BoardController(MethodView):
         self.total_loss_model = total_loss_model
         self.loss_mask_model = loss_mask_model
 
-    def get(self):
+    def create_figure(self, data):
         fig = Figure()
-        ax = fig.subplots(1,2)
-        ax[0].plot(self.total_loss_model.get_all())
-        ax[1].plot(self.loss_mask_model.get_all())
+        ax = fig.subplots()
+        ax.plot(data)
 
         buf = BytesIO()
         fig.savefig(buf, format="png")
 
-        data = base64.b64encode(buf.getbuffer()).decode("ascii")
+        return base64.b64encode(buf.getbuffer()).decode("ascii")
 
+    def get(self):
+        figures = []
+        
+        with Pool() as p:
+            figures = p.map(self.create_figure, [self.total_loss_model.get_all(), self.loss_mask_model.get_all()])
 
-        # TODO: Create the figure for loss mask
-
-        return f"<img src='data:image/png;base64, {data}' />"
-
+        return render_template('dashboard.html', title="Yeee", figures = figures)

@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 
 from controllers.board_controller import BoardController
@@ -8,8 +9,9 @@ from controllers.metrics.loss_mask import LossMaskController
 from models.metrics.total_loss import TotalLoss
 from models.metrics.loss_mask import LossMask
 
+templates_path = os.path.join(os.getcwd(), "templates")
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=templates_path)
 
 total_loss_model = TotalLoss()
 loss_mask_model = LossMask()

@@ -1,0 +1,13 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+
+    <body>
+        <h1>{{ total_loss_title }}</h1>
+        
+        {% for f in figures %}
+        <img src="data:image/png;base64, {{ f }}" />
+        {% endfor %}
+    </body>
+</html>
