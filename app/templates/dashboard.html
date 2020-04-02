@@ -9,7 +9,7 @@
     <body>
         <h1>{{ total_loss_title }}</h1>
 
-        <table>
+        <!-- <table>
             <caption>Metrics</caption>
             <thead>
                 <tr>
@@ -23,11 +23,18 @@
                     <td><div id="loss_mask_figure"></div></td>
                 </tr>
             </tbody>
-        </table>
+        </table> -->
+        <div id="metrics">
+
+        </div>
 
     </body>
 
     <script>
+        function update_figure(name, value){
+            $("#" + name).html('<img src="data:image/png;base64,' + value + '" />');
+        }
+
         $("document").ready(function(){
             var socket = io.connect("http://" + document.domain + ":" + location.port);
 
@@ -35,13 +42,17 @@
                 console.log("Connected");
             });
 
-            socket.on("loss_mask", function(msg){
-                $("#loss_mask_figure").html("<img src='data:image/png;base64," + msg + "' />");
-            });
+            socket.on("metrics", function(msg){
+                name = msg["name"];
+                value = msg["value"];
 
-            socket.on("total_loss", function(msg){
-                $("#total_loss_figure").html('<img src="data:image/png;base64,' + msg + '" />');
-            });
+                if($("#" + name).length){
+                    update_figure(name, value);
+                }else{
+                    $("#metrics").append("<div id='" + name + "'></div>")
+                    update_figure(name, value);
+                }
+            })
         });
     </script>
 </html>
