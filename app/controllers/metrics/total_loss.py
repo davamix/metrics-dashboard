@@ -1,6 +1,9 @@
+import base64
+from io import BytesIO
 from flask import request
 from flask.views import MethodView
 from flask_socketio import emit
+from matplotlib.figure import Figure
 
 
 class TotalLossController(MethodView):
@@ -8,8 +11,18 @@ class TotalLossController(MethodView):
         self.socket = socket
         self.model = model
     
-    def get(self):
-        return f"{self.model.get_all()}"
+    def create_figure(self, data):
+        fig = Figure()
+        ax = fig.subplots()
+        ax.plot(data)
+
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+
+        return base64.b64encode(buf.getbuffer()).decode("ascii")
+
+    # def get(self):
+    #     return f"{self.model.get_all()}"
 
     def post(self):
         data = request.get_json()
@@ -17,6 +30,8 @@ class TotalLossController(MethodView):
         if data:
             self.model.add(data)
             
-            self.socket.emit("total_loss", data)
+            figure = self.create_figure(self.model.get_all())
+            
+            self.socket.emit("total_loss", figure)
 
         return "No data added", 204
