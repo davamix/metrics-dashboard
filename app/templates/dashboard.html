@@ -1,5 +1,8 @@
 <html>
     <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+
         <title>{{ title }}</title>
     </head>
 
@@ -9,5 +12,30 @@
         {% for f in figures %}
         <img src="data:image/png;base64, {{ f }}" />
         {% endfor %}
+
+        <p>
+            <div>
+                <h2>Loss mask: <span id="loss_mask"></span></h2>
+                <h2>Total loss: <span id="total_loss"></span></h2>
+            </div>
+        </p>
     </body>
+
+    <script>
+        $("document").ready(function(){
+            var socket = io.connect("http://" + document.domain + ":" + location.port);
+
+            socket.on("connect", function(){
+                console.log("Connected");
+            });
+
+            socket.on("loss_mask", function(msg){
+                $("#loss_mask").html(msg);
+            });
+
+            socket.on("total_loss", function(msg){
+                $("#total_loss").html(msg);
+            })
+        });
+    </script>
 </html>
