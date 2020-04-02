@@ -9,8 +9,21 @@
     <body>
         <h1>{{ total_loss_title }}</h1>
 
-        <div id="total_loss_figure"></div>
-        <div id="loss_mask_figure"></div>
+        <table>
+            <caption>Metrics</caption>
+            <thead>
+                <tr>
+                    <th>Total loss</th>
+                    <th>Loss mask</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div id="total_loss_figure"></div></td>
+                    <td><div id="loss_mask_figure"></div></td>
+                </tr>
+            </tbody>
+        </table>
 
     </body>
 

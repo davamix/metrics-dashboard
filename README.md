@@ -1,5 +1,7 @@
 ## Metrics dashboard (WIP)
 
+![screen](output.webp "Screen")
+
 ### Build:
 ```
 docker-compose build
