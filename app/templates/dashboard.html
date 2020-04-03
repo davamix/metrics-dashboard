@@ -1,34 +1,29 @@
-<html>
+<!DOCTYPE html>
+<html lang=es>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha256-bQmrZe4yPnQrLTY+1gYylfNMBuGfnT/HKsCGX+9Xuqo=" crossorigin="anonymous"></script>
+
+        <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-rCA2D+D9QXuP2TomtQwd+uP50EHjpafN+wruul0sXZzX/Da7Txn4tB9aLMZV4DZm" crossorigin="anonymous">
 
         <title>{{ title }}</title>
     </head>
 
     <body>
-        <h1>{{ total_loss_title }}</h1>
+        <div class="container-fluid">
+            <div class="row" id="metrics">
 
-        <!-- <table>
-            <caption>Metrics</caption>
-            <thead>
-                <tr>
-                    <th>Total loss</th>
-                    <th>Loss mask</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><div id="total_loss_figure"></div></td>
-                    <td><div id="loss_mask_figure"></div></td>
-                </tr>
-            </tbody>
-        </table> -->
-        <div id="metrics">
-
+            </div>
         </div>
 
     </body>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script>
         function update_figure(name, value){
@@ -46,10 +41,12 @@
                 name = msg["name"];
                 value = msg["value"];
 
+                name = name.replace(/\//g, "-")
+
                 if($("#" + name).length){
                     update_figure(name, value);
                 }else{
-                    $("#metrics").append("<div id='" + name + "'></div>")
+                    $("#metrics").append("<div class='col' id='" + name + "'></div>")
                     update_figure(name, value);
                 }
             })

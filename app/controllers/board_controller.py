@@ -12,7 +12,7 @@ class BoardController(MethodView):
         self.socket = socket
 
     def create_figure(self, name, values):
-        fig = Figure()
+        fig = Figure(figsize=(7,3))
         ax = fig.subplots()
         ax.set_title(name)
         ax.plot(values)
