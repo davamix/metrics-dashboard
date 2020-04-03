@@ -1,4 +1,4 @@
-## Metrics dashboard (WIP)
+## Metrics dashboard
 
 ![screen](output.webp "Screen")
 
