@@ -11,16 +11,24 @@ class BoardController(MethodView):
         self.model = model
         self.socket = socket
 
-    def create_figure(self, name, values):
+    def create_figure(self, metrics):
         fig = Figure(figsize=(7,3))
         ax = fig.subplots()
-        ax.set_title(name)
-        ax.plot(values)
+
+        # Figure title
+        figure_name = " & ".join(metrics)
+        ax.set_title(figure_name)
+
+        # Plot metrics
+        for m in metrics:
+            ax.plot(self.model.get(m), label=m)
+
+        ax.legend()
 
         buf = BytesIO()
         fig.savefig(buf, format="png")
 
-        return base64.b64encode(buf.getbuffer()).decode("ascii")
+        return figure_name, base64.b64encode(buf.getbuffer()).decode("ascii")
             
     def get(self):
         return render_template('dashboard.html', title="Metrics")
@@ -29,10 +37,11 @@ class BoardController(MethodView):
         data = request.get_json()
 
         if data:
-            self.model.add(data[0], data[1])
+            for metric in data:
+                self.model.add(metric, data[metric])
 
-            figure = self.create_figure(data[0], self.model.get(data[0]))
+            name, figure = self.create_figure(data.keys())
 
-            self.socket.emit("metrics", {"name":data[0], "value":figure})
+            self.socket.emit("metrics", {"name":name, "value":figure})
 
         return "", 204

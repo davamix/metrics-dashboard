@@ -41,7 +41,7 @@
                 name = msg["name"];
                 value = msg["value"];
 
-                name = name.replace(/\//g, "-")
+                name = name.replace(/\//g, '_').replace(/\&/g, "__").replace(/\s/g,"");
 
                 if($("#" + name).length){
                     update_figure(name, value);
