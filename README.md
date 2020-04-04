@@ -2,7 +2,8 @@
 
 ![screen](images/output.webp "Screen")
 
-Merging
+Merging metrics
+
 ![merge](images/merging.webp "Merging metrics")
 
 ### Build:
