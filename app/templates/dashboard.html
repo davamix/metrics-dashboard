@@ -94,20 +94,30 @@
                 console.log("Connected");
             });
 
-            // Listening the "metrics" event
-            socket.on("metrics", function(msg){
+            // Listening the "draw_metrics" event
+            socket.on("draw_metrics", function(msg){
                 name = msg["name"];
                 value = msg["value"];
 
-                name = name.replace(/\//g, '_').replace(/\&/g, "__").replace(/\s/g,"");
+                // name = name.replace(/\//g, '_').replace(/\&/g, "__").replace(/\s/g,"");
 
                 // Check if the element "name" exists and update the figure
                 if($("#" + name).length){
+                    console.log("Updating " + name);
                     update_figure(name, value);
                 }else{
+                    console.log("Creating " + name);
                     // If not exists, then create a new div with the Drag&Drop attributes and update the figure
                     $("#metrics").append("<div class='col' id='" + name + "' draggable='true' ondragstart='dragstart(event)' ondrop='drop(event)' ondragover='dragover(event)'></div>")
                     update_figure(name, value);
+                }
+            })
+
+            socket.on("merged", function(metrics){
+                for(let x in metrics){
+                    console.log("Removing " + metrics[x])
+                    // name = metrics[x].replace(/\//g, '_').replace(/\&/g, "__").replace(/\s/g,"");
+                    $("#" + metrics[x]).remove();
                 }
             })
         });
