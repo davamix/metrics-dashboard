@@ -26,27 +26,87 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script>
-        function update_figure(name, value){
-            $("#" + name).html('<img src="data:image/png;base64,' + value + '" />');
-        }
-
+        var dragstart; // dragstart event handler
+        var dragover; // dragover event handler
+        var drop; // drop event handeler
+        
         $("document").ready(function(){
             var socket = io.connect("http://" + document.domain + ":" + location.port);
 
+            /**
+            * Replace the existing figure with the new one.
+            * @param {string}  name    Name of the element that contains the figure to be replaced.
+            * @param {Object}  value   Image with base64 encoding.
+            */
+            function update_figure(name, value){
+                $("#" + name).html('<img src="data:image/png;base64,' + value + '" />');
+            }
+
+            dragstart = function dragstart_handler(ev){
+                element_id = ev.target.id;
+
+                // If ev.target.id is empty, means the object is the image, then we need to select the parent div
+                if(element_id == ""){
+                    element_id = ev.srcElement.parentNode.id;
+                }
+                
+                ev.dataTransfer.setData("application/metrics", element_id);
+                ev.dataTransfer.dropEffect = "move";
+
+                console.log("Dragging: " + element_id);
+            }
+
+            dragover = function dragover_handler(ev){
+                ev.preventDefault();
+                ev.dataTransfer.dropEffect = "move";
+            }
+
+            drop = function drop_handler(ev){
+                element_id = ev.target.id;
+
+                // If ev.target.id is empty, means the object is the image, then we need to select the parent div
+                if(element_id == ""){
+                    element_id = ev.srcElement.parentNode.id;
+                }
+
+                ev.preventDefault();
+                const data = ev.dataTransfer.getData("application/metrics");
+                
+                // NOTE: if data != element_id => OK; otherwise means is dropping on the same element.
+                console.log("Dropping data: " + data);
+                console.log("Dropping on: " + element_id);
+
+                if(data != element_id){
+                    merge_metrics([data, element_id]);
+                }
+            }
+
+            function merge_metrics(metrics){
+                if (metrics.length < 2) return;
+
+                console.log("Merging: " + metrics);
+
+                socket.emit("merge", metrics);
+            }
+
+            // Connections stablished
             socket.on("connect", function(){
                 console.log("Connected");
             });
 
+            // Listening the "metrics" event
             socket.on("metrics", function(msg){
                 name = msg["name"];
                 value = msg["value"];
 
                 name = name.replace(/\//g, '_').replace(/\&/g, "__").replace(/\s/g,"");
 
+                // Check if the element "name" exists and update the figure
                 if($("#" + name).length){
                     update_figure(name, value);
                 }else{
-                    $("#metrics").append("<div class='col' id='" + name + "'></div>")
+                    // If not exists, then create a new div with the Drag&Drop attributes and update the figure
+                    $("#metrics").append("<div class='col' id='" + name + "' draggable='true' ondragstart='dragstart(event)' ondrop='drop(event)' ondragover='dragover(event)'></div>")
                     update_figure(name, value);
                 }
             })

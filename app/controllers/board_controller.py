@@ -11,7 +11,16 @@ class BoardController(MethodView):
         self.model = model
         self.socket = socket
 
+        self.socket.on_event("merge", self.merge_metrics)
+
     def create_figure(self, metrics):
+        """
+        Create a new matplotlib figure based on the metrics
+
+        :param array metrics: Array with metric names
+        :return: image encoded in base64 and the figure name
+        :rtype: string, string
+        """
         fig = Figure(figsize=(7,3))
         ax = fig.subplots()
 
@@ -45,3 +54,8 @@ class BoardController(MethodView):
             self.socket.emit("metrics", {"name":name, "value":figure})
 
         return "", 204
+
+    def merge_metrics(self, metrics):
+        name, figure = self.create_figure(metrics)
+
+        self.socket.emit("metrics", {"name":name, "value":figure})

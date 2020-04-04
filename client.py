@@ -19,14 +19,17 @@ def read_json(line, key):
     return data[key]
 
 with open("metrics.json", "r") as f:
-    for l in f.readlines():
-        loss = read_json(l, "total_loss")
-        mask = read_json(l, "loss_mask")
+    # for l in f.readlines():
+    l = f.readline()
+    loss = read_json(l, "total_loss")
+    mask = read_json(l, "loss_mask")
 
-        send_data({"total_loss":loss, "loss_mask":mask}, url_metric)
+    # send_data({"total_loss":loss, "loss_mask":mask}, url_metric)
+    send_data({"total_loss":loss}, url_metric)
+    send_data({ "loss_mask":mask}, url_metric)
 
-with open("metrics.json", "r") as f:
-    for l in f.readlines():
-        acc = read_json(l, "mask_rcnn/accuracy")
+# with open("metrics.json", "r") as f:
+#     for l in f.readlines():
+#         acc = read_json(l, "mask_rcnn/accuracy")
         
-        send_data({"mask_rcnn/accuracy":acc}, url_metric)
+#         send_data({"mask_rcnn/accuracy":acc}, url_metric)
