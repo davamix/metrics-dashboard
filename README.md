@@ -1,6 +1,9 @@
 ## Metrics dashboard
 
-![screen](output.webp "Screen")
+![screen](images/output.webp "Screen")
+
+Merging metrics
+![merge](images/merge.webp "Merge metics")
 
 ### Build:
 ```
