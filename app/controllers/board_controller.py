@@ -48,8 +48,6 @@ class BoardController(MethodView):
         return render_template('dashboard.html', title="Metrics")
 
     def post(self):
-        # TODO: If metrics > 1 then merge the names in merged_metrics
-
         # data is a dictionary {"metric_name": value}
         data = request.get_json()
         storage_key = None

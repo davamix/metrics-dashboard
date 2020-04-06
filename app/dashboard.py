@@ -12,7 +12,7 @@ socketio = SocketIO(app)
 
 # metric_model = Metric()
 metrics = [] # Array of Metric
-merged_metrics = {} # {"metric_name": Metric[]}
+merged_metrics = {} # {"metric_name": metric_names[]}
 
 app.add_url_rule("/board", view_func=BoardController.as_view("board", metrics = metrics, merged = merged_metrics, socket = socketio))
 
